@@ -27,3 +27,6 @@ services:
       - net.ipv6.conf.all.proxy_ndp=1
       - net.ipv6.conf.default.forwarding=1
     restart: unless-stopped
+
+volumes:
+  wireguard:
