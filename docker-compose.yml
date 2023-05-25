@@ -10,7 +10,7 @@ services:
       - PUID=1000
       - PGID=994
       - TZ=Europe/Amsterdam
-      - SERVERPORT=51820
+      - SERVERPORT=443
       - PEERS=3
       - PEERDNS=auto
       - INTERNAL_SUBNET=192.168.222.0
@@ -19,7 +19,7 @@ services:
     volumes:
       - wireguard:/config
     ports:
-      - 443:51820/udp
+      - 443:443/udp
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
       - net.ipv6.conf.all.disable_ipv6=0
