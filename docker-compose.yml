@@ -5,12 +5,13 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 10.2.0.0/16
+        - subnet: 10.2.0.0/24
 
 services:
   unbound:
     image: mvance/unbound:latest
     container_name: unbound
+    host_name: unbound
     volumes:
       - unbound:/opt/unbound/etc/unbound
     networks:
@@ -20,6 +21,7 @@ services:
   adguard:
     image: adguard/adguardhome
     container_name: adguard
+    host_name: adguard
     volumes:
       - adguard-work:/opt/adguardhome/work
       - adguard-conf:/opt/adguardhome/conf
@@ -32,8 +34,10 @@ services:
   wireguard:
     image: lscr.io/linuxserver/wireguard:latest
     container_name: wireguard
+    host_name: wireguard
     cap_add:
       - NET_ADMIN
+      - SYS_MODULE
     environment:
       - PUID=1000
       - PGID=994
@@ -41,11 +45,12 @@ services:
       - SERVERPORT=51820
       - PEERS=1
       - PEERDNS=10.2.0.11
-      - INTERNAL_SUBNET=10.99.0.0/24
+      - INTERNAL_SUBNET=10.69.0.0/24
       - ALLOWED_IPS=0.0.0.0/0
-      - LOG_CONFS=true
+      - LOG_CONFS=false
     volumes:
       - wireguard:/config
+      - /lib/modules:/lib/modules
     networks:
       private_network:
         ipv4_address: 10.2.0.12
