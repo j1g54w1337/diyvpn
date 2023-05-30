@@ -1,6 +1,34 @@
 ---
-version: "2.1"
+version: "3"
+networks:
+  private_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.2.0.0/16
+
 services:
+  unbound:
+    image: mvance/unbound:latest
+    container_name: unbound
+    volumes:
+      - unbound:/opt/unbound/etc/unbound
+    networks:
+      private_network:
+        ipv4_address: 10.2.0.10
+
+  adguard:
+    image: adguard/adguardhome
+    container_name: adguard
+    volumes:
+      - adguard-work:/opt/adguardhome/work
+      - adguard-conf:/opt/adguardhome/conf
+    networks:
+      private_network:
+        ipv4_address: 10.2.0.11
+    depends_on:
+      - unbound
+
   wireguard:
     image: lscr.io/linuxserver/wireguard:latest
     container_name: wireguard
@@ -12,21 +40,26 @@ services:
       - TZ=Europe/Amsterdam
       - SERVERPORT=51820
       - PEERS=1
-      - PEERDNS=auto
+      - PEERDNS=10.2.0.53
       - INTERNAL_SUBNET=192.168.222.0
       - ALLOWED_IPS=0.0.0.0/0
       - LOG_CONFS=true
     volumes:
       - wireguard:/config
+    networks:
+      private_network:
+        ipv4_address: 10.2.0.12
     ports:
       - 51820:51820/udp
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
-      - net.ipv6.conf.all.disable_ipv6=0
-      - net.ipv6.conf.all.forwarding=1
-      - net.ipv6.conf.all.proxy_ndp=1
-      - net.ipv6.conf.default.forwarding=1
     restart: unless-stopped
+    depends_on:
+      - unbound
+      - adguard
 
 volumes:
+  unbound:
+  adguard-work:
+  adguard-conf:
   wireguard:
