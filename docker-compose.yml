@@ -11,7 +11,7 @@ services:
   unbound:
     image: mvance/unbound:latest
     container_name: unbound
-    host_name: unbound
+    hostname: unbound
     volumes:
       - unbound:/opt/unbound/etc/unbound
     networks:
@@ -21,7 +21,7 @@ services:
   adguard:
     image: adguard/adguardhome
     container_name: adguard
-    host_name: adguard
+    hostname: adguard
     volumes:
       - adguard-work:/opt/adguardhome/work
       - adguard-conf:/opt/adguardhome/conf
@@ -34,7 +34,7 @@ services:
   wireguard:
     image: lscr.io/linuxserver/wireguard:latest
     container_name: wireguard
-    host_name: wireguard
+    hostname: wireguard
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
