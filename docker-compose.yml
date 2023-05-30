@@ -41,7 +41,7 @@ services:
       - SERVERPORT=51820
       - PEERS=1
       - PEERDNS=10.2.0.11
-      - INTERNAL_SUBNET=192.168.222.0
+      - INTERNAL_SUBNET=10.99.0.0/24
       - ALLOWED_IPS=0.0.0.0/0
       - LOG_CONFS=true
     volumes:
